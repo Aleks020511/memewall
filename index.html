@@ -1,1 +1,74 @@
-HTML UPDATED
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MemeWall.io — Preserve memes for future generations!</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #111; color: #fff; margin: 0; padding: 0; }
+    header { text-align: center; padding: 2em; background: #222; }
+    h1 { margin: 0; font-size: 2.5em; }
+    p.tagline { font-size: 1.2em; color: #aaa; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(50, 10px);
+      grid-template-rows: repeat(50, 10px);
+      margin: 2em auto;
+      width: 500px;
+      height: 500px;
+      border: 2px solid #555;
+    }
+    .pixel {
+      width: 10px;
+      height: 10px;
+      background: #333;
+      border: 1px solid #222;
+    }
+    .pixel.occupied {
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+    }
+    footer { text-align: center; padding: 1em; font-size: 0.9em; color: #777; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MemeWall.io</h1>
+    <p class="tagline">Preserve memes for future generations!</p>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    © 2025 MemeWall — BTC/ETH/TON supported — Powered by you
+  </footer>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const exampleMemes = {
+      '1122': 'doge.png',
+      '2233': 'elon.png',
+      '3344': 'diamond_hands.png',
+      '4455': 'buy_the_dip.gif'
+    };
+
+    for (let y = 0; y < 50; y++) {
+      for (let x = 0; x < 50; x++) {
+        const key = `${x}${y}`;
+        const div = document.createElement('div');
+        div.className = 'pixel';
+
+        if (exampleMemes[key]) {
+          div.classList.add('occupied');
+          div.style.backgroundImage = `url('memes/${exampleMemes[key]}')`;
+          div.title = 'Meme pixel — already bought';
+        }
+
+        grid.appendChild(div);
+      }
+    }
+  </script>
+</body>
+</html>
