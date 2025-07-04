@@ -1,74 +1,140 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MemeWall.io — Preserve memes for future generations!</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #111; color: #fff; margin: 0; padding: 0; }
-    header { text-align: center; padding: 2em; background: #222; }
-    h1 { margin: 0; font-size: 2.5em; }
-    p.tagline { font-size: 1.2em; color: #aaa; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(50, 10px);
-      grid-template-rows: repeat(50, 10px);
-      margin: 2em auto;
-      width: 500px;
-      height: 500px;
-      border: 2px solid #555;
-    }
-    .pixel {
-      width: 10px;
-      height: 10px;
-      background: #333;
-      border: 1px solid #222;
-    }
-    .pixel.occupied {
-      background-size: cover;
-      background-position: center;
-      cursor: pointer;
-    }
-    footer { text-align: center; padding: 1em; font-size: 0.9em; color: #777; }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>MemeWall.io</h1>
-    <p class="tagline">Preserve memes for future generations!</p>
-  </header>
-
-  <div class="grid" id="grid"></div>
-
-  <footer>
-    © 2025 MemeWall — BTC/ETH/TON supported — Powered by you
-  </footer>
-
-  <script>
-    const grid = document.getElementById('grid');
-    const exampleMemes = {
-      '1122': 'doge.png',
-      '2233': 'elon.png',
-      '3344': 'diamond_hands.png',
-      '4455': 'buy_the_dip.gif'
-    };
-
-    for (let y = 0; y < 50; y++) {
-      for (let x = 0; x < 50; x++) {
-        const key = `${x}${y}`;
-        const div = document.createElement('div');
-        div.className = 'pixel';
-
-        if (exampleMemes[key]) {
-          div.classList.add('occupied');
-          div.style.backgroundImage = `url('memes/${exampleMemes[key]}')`;
-          div.title = 'Meme pixel — already bought';
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemeWall.io — Preserve memes for future generations!</title>
+    <style>
+        /* --- Общие стили --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
         }
 
-        grid.appendChild(div);
-      }
-    }
-  </script>
+        /* --- Стили для заголовка и описания --- */
+        .header {
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #000;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* --- Стили для кнопок оплаты --- */
+        .payment-buttons {
+            margin-bottom: 30px;
+        }
+
+        .payment-button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .payment-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .btc { background-color: #f7931a; }
+        .eth { background-color: #627eea; }
+        .ton { background-color: #0098ea; }
+
+        /* --- Стили для сетки пикселей --- */
+        .pixel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 5px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* --- Стили для отдельного пикселя/мема --- */
+        .pixel {
+            width: 100px;
+            height: 100px;
+            background-color: #e9ebee;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Скрывает части изображения, выходящие за рамки */
+        }
+        
+        .pixel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Изображение полностью покрывает блок */
+            transition: transform 0.3s ease; /* Плавность для анимации */
+        }
+        
+        /* --- Эффект увеличения при наведении --- */
+        .pixel img:hover {
+            transform: scale(1.5); /* Увеличиваем изображение в 1.5 раза */
+            z-index: 10;
+            position: relative;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Стена Пиксельных Мемов</h1>
+        <p>Купи свой пиксель всего за 1 доллар, загрузи мем и стань частью истории интернета! Выбери удобный способ оплаты.</p>
+    </div>
+
+    <div class="payment-buttons">
+        <button class="payment-button btc">Купить за Bitcoin</button>
+        <button class="payment-button eth">Купить за Ethereum</button>
+        <button class="payment-button ton">Купить за TON</button>
+    </div>
+
+    <div class="pixel-grid">
+        <div class="pixel">
+            <img src="https://i.imgflip.com/1g8my4.jpg" alt="Distracted Boyfriend Meme">
+        </div>
+        <div class="pixel">
+            <img src="https://i.kym-cdn.com/entries/icons/original/000/030/423/cover5.jpg" alt="Woman Yelling at a Cat">
+        </div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+        <div class="pixel">
+             <img src="https://i.kym-cdn.com/entries/icons/facebook/000/021/807/4d7.jpg" alt="Roll Safe">
+        </div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+        <div class="pixel"></div>
+    </div>
+
 </body>
 </html>
