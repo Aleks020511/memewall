@@ -1,140 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MemeWall.io — Preserve memes for future generations!</title>
-    <style>
-        /* --- Общие стили --- */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f0f2f5;
-            color: #1c1e21;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MemeWall.io — Preserve memes for future generations!</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #111; color: #fff; margin: 0; padding: 0; }
+    header { text-align: center; padding: 2em; background: #222; }
+    h1 { margin: 0; font-size: 2.5em; }
+    p.tagline { font-size: 1.2em; color: #aaa; }
 
-        /* --- Стили для заголовка и описания --- */
-        .header {
-            max-width: 900px;
-            margin: 0 auto 30px auto;
-        }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(100, 10px);
+      grid-template-rows: repeat(50, 10px);
+      margin: 2em auto;
+      width: 1000px;
+      height: 500px;
+      border: 2px solid #555;
+    }
 
-        h1 {
-            font-size: 2.5rem;
-            color: #000;
-        }
+    .pixel {
+      width: 10px;
+      height: 10px;
+      background: #333;
+      border: 1px solid #222;
+    }
 
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
+    .pixel.occupied {
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
 
-        /* --- Стили для кнопок оплаты --- */
-        .payment-buttons {
-            margin-bottom: 30px;
-        }
+    .pixel.occupied:hover {
+      transform: scale(3);
+      z-index: 10;
+      position: relative;
+    }
 
-        .payment-button {
-            display: inline-block;
-            padding: 12px 25px;
-            margin: 5px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+    footer {
+      text-align: center;
+      padding: 1em;
+      font-size: 0.9em;
+      color: #777;
+    }
 
-        .payment-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
+    .paywall {
+      text-align: center;
+      margin: 2em auto;
+      max-width: 500px;
+    }
 
-        .btc { background-color: #f7931a; }
-        .eth { background-color: #627eea; }
-        .ton { background-color: #0098ea; }
+    .paywall button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #444;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
 
-        /* --- Стили для сетки пикселей --- */
-        .pixel-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 5px;
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
+    .paywall button:hover {
+      background: #666;
+    }
 
-        /* --- Стили для отдельного пикселя/мема --- */
-        .pixel {
-            width: 100px;
-            height: 100px;
-            background-color: #e9ebee;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden; /* Скрывает части изображения, выходящие за рамки */
-        }
-        
-        .pixel img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Изображение полностью покрывает блок */
-            transition: transform 0.3s ease; /* Плавность для анимации */
-        }
-        
-        /* --- Эффект увеличения при наведении --- */
-        .pixel img:hover {
-            transform: scale(1.5); /* Увеличиваем изображение в 1.5 раза */
-            z-index: 10;
-            position: relative;
-        }
-        
-    </style>
+    .upload-form {
+      display: none;
+      text-align: center;
+      margin: 20px auto;
+    }
+
+    .upload-form input[type="file"] {
+      margin-top: 10px;
+    }
+
+    .notice {
+      font-size: 0.9em;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>MemeWall.io</h1>
+    <p class="tagline">Preserve memes for future generations!</p>
+  </header>
 
-    <div class="header">
-        <h1>Стена Пиксельных Мемов</h1>
-        <p>Купи свой пиксель всего за 1 доллар, загрузи мем и стань частью истории интернета! Выбери удобный способ оплаты.</p>
-    </div>
+  <div class="paywall">
+    <p>Support the wall by donating and get your own meme pixel!</p>
+    <button onclick="showPaid()">I paid with BTC</button>
+    <button onclick="showPaid()">I paid with ETH</button>
+    <button onclick="showPaid()">I paid with TON</button>
+    <p class="notice">Your meme will appear after choosing a spot.</p>
+  </div>
 
-    <div class="payment-buttons">
-        <button class="payment-button btc">Купить за Bitcoin</button>
-        <button class="payment-button eth">Купить за Ethereum</button>
-        <button class="payment-button ton">Купить за TON</button>
-    </div>
+  <div class="upload-form" id="uploadForm">
+    <p>Select a pixel, then upload your meme:</p>
+    <input type="file" id="memeFile" accept="image/*">
+  </div>
 
-    <div class="pixel-grid">
-        <div class="pixel">
-            <img src="https://i.imgflip.com/1g8my4.jpg" alt="Distracted Boyfriend Meme">
-        </div>
-        <div class="pixel">
-            <img src="https://i.kym-cdn.com/entries/icons/original/000/030/423/cover5.jpg" alt="Woman Yelling at a Cat">
-        </div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-        <div class="pixel">
-             <img src="https://i.kym-cdn.com/entries/icons/facebook/000/021/807/4d7.jpg" alt="Roll Safe">
-        </div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-        <div class="pixel"></div>
-    </div>
+  <div class="grid" id="grid"></div>
 
+  <footer>
+    © 2025 MemeWall — BTC/ETH/TON supported — Powered by you
+  </footer>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const form = document.getElementById('uploadForm');
+    const input = document.getElementById('memeFile');
+    let uploadEnabled = false;
+    let selectedPixel = null;
+
+    const exampleMemes = {
+      '1122': 'doge.png',
+      '2233': 'elon.png',
+      '3344': 'diamond_hands.png',
+      '4455': 'buy_the_dip.gif'
+    };
+
+    for (let y = 0; y < 50; y++) {
+      for (let x = 0; x < 100; x++) {
+        const key = `${x}${y}`;
+        const div = document.createElement('div');
+        div.className = 'pixel';
+
+        if (exampleMemes[key]) {
+          div.classList.add('occupied');
+          div.style.backgroundImage = `url('memes/${exampleMemes[key]}')`;
+          div.title = 'Meme pixel — already bought';
+        } else {
+          div.onclick = () => {
+            if (uploadEnabled) {
+              selectedPixel = div;
+              input.click();
+            } else {
+              alert("Please donate first to unlock uploading.");
+            }
+          };
+        }
+
+        grid.appendChild(div);
+      }
+    }
+
+    input.addEventListener('change', () => {
+      if (selectedPixel && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          selectedPixel.classList.add('occupied');
+          selectedPixel.style.backgroundImage = `url(${e.target.result})`;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    });
+
+    function showPaid() {
+      uploadEnabled = true;
+      form.style.display = "block";
+      alert("You can now select a pixel and upload your meme.");
+    }
+  </script>
 </body>
 </html>
