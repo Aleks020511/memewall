@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MemeWall.io — 1 Million Memes</title>
+  <title>MemeWall.io — Zoom on Hover</title>
   <style>
     body { margin: 0; background: #111; color: #fff; font-family: sans-serif; }
 
@@ -12,21 +12,6 @@
       text-align: center;
       padding: 1em;
       background: #222;
-    }
-
-    .zoom-controls {
-      text-align: center;
-      margin: 1em;
-    }
-
-    .zoom-controls button {
-      margin: 0 5px;
-      padding: 8px 16px;
-      font-size: 1em;
-      background: #444;
-      color: white;
-      border: none;
-      cursor: pointer;
     }
 
     .container {
@@ -42,7 +27,7 @@
       display: grid;
       grid-template-columns: repeat(1000, 5px);
       grid-template-rows: repeat(1000, 5px);
-      transform-origin: top left;
+      position: relative;
     }
 
     .pixel {
@@ -50,12 +35,23 @@
       height: 5px;
       background: #333;
       border: 0.5px solid #222;
+      position: relative;
     }
 
     .pixel.occupied {
       background-size: cover;
       background-position: center;
       cursor: pointer;
+    }
+
+    .preview {
+      position: fixed;
+      display: none;
+      z-index: 1000;
+      border: 2px solid #fff;
+      max-width: 300px;
+      max-height: 300px;
+      pointer-events: none;
     }
 
     footer {
@@ -70,18 +66,14 @@
 <body>
   <header>
     <h1>MemeWall.io</h1>
-    <p>Preserve memes for future generations — 1 Million Pixels Edition</p>
+    <p>Preserve memes for future generations — Zoom on Hover</p>
   </header>
-
-  <div class="zoom-controls">
-    <button onclick="setZoom(0.5)">Zoom Out</button>
-    <button onclick="setZoom(1)">Reset</button>
-    <button onclick="setZoom(2)">Zoom In</button>
-  </div>
 
   <div class="container">
     <div class="grid" id="grid"></div>
   </div>
+
+  <img id="preview" class="preview" src="" alt="Preview"/>
 
   <footer>
     &copy; 2025 MemeWall — Powered by BTC / ETH / TON
@@ -89,18 +81,13 @@
 
   <script>
     const grid = document.getElementById('grid');
-    let zoomLevel = 1;
-
-    function setZoom(level) {
-      zoomLevel = level;
-      grid.style.transform = `scale(${zoomLevel})`;
-    }
+    const preview = document.getElementById('preview');
 
     const occupied = {
-      "1122": "doge.png",
-      "2233": "elon.png",
-      "3344": "diamond_hands.png",
-      "4455": "buy_the_dip.gif"
+      "1122": "memes/doge.png",
+      "2233": "memes/elon.png",
+      "3344": "memes/diamond_hands.png",
+      "4455": "memes/buy_the_dip.gif"
     };
 
     for (let y = 0; y < 1000; y++) {
@@ -111,8 +98,21 @@
 
         if (occupied[key]) {
           div.classList.add('occupied');
-          div.style.backgroundImage = `url('memes/${occupied[key]}')`;
-          div.title = "Occupied meme pixel";
+          div.style.backgroundImage = `url('${occupied[key]}')`;
+
+          div.addEventListener('mouseenter', e => {
+            preview.src = occupied[key];
+            preview.style.display = 'block';
+          });
+
+          div.addEventListener('mousemove', e => {
+            preview.style.left = (e.clientX + 15) + 'px';
+            preview.style.top = (e.clientY + 15) + 'px';
+          });
+
+          div.addEventListener('mouseleave', () => {
+            preview.style.display = 'none';
+          });
         }
 
         grid.appendChild(div);
