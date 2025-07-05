@@ -1,61 +1,27 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MemeWall.io — Preserve memes for future generations!</title>
+  <title>MemeWall.io — 1 Million Memes</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #111; color: #fff; margin: 0; padding: 0; }
-    header { text-align: center; padding: 2em; background: #222; }
-    h1 { margin: 0; font-size: 2.5em; }
-    p.tagline { font-size: 1.2em; color: #aaa; }
+    body { margin: 0; background: #111; color: #fff; font-family: sans-serif; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(100, 10px);
-      grid-template-rows: repeat(50, 10px);
-      margin: 2em auto;
-      width: 1000px;
-      height: 500px;
-      border: 2px solid #555;
-    }
-
-    .pixel {
-      width: 10px;
-      height: 10px;
-      background: #333;
-      border: 1px solid #222;
-    }
-
-    .pixel.occupied {
-      background-size: cover;
-      background-position: center;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .pixel.occupied:hover {
-      transform: scale(3);
-      z-index: 10;
-      position: relative;
-    }
-
-    footer {
+    header {
       text-align: center;
       padding: 1em;
-      font-size: 0.9em;
-      color: #777;
+      background: #222;
     }
 
-    .paywall {
+    .zoom-controls {
       text-align: center;
-      margin: 2em auto;
-      max-width: 500px;
+      margin: 1em;
     }
 
-    .paywall button {
-      margin: 5px;
-      padding: 10px 20px;
+    .zoom-controls button {
+      margin: 0 5px;
+      padding: 8px 16px;
       font-size: 1em;
       background: #444;
       color: white;
@@ -63,105 +29,94 @@
       cursor: pointer;
     }
 
-    .paywall button:hover {
-      background: #666;
+    .container {
+      width: 100vw;
+      height: 80vh;
+      overflow: scroll;
+      background: #000;
+      border-top: 2px solid #333;
+      border-bottom: 2px solid #333;
     }
 
-    .upload-form {
-      display: none;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(1000, 5px);
+      grid-template-rows: repeat(1000, 5px);
+      transform-origin: top left;
+    }
+
+    .pixel {
+      width: 5px;
+      height: 5px;
+      background: #333;
+      border: 0.5px solid #222;
+    }
+
+    .pixel.occupied {
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+    }
+
+    footer {
       text-align: center;
-      margin: 20px auto;
-    }
-
-    .upload-form input[type="file"] {
-      margin-top: 10px;
-    }
-
-    .notice {
-      font-size: 0.9em;
+      padding: 1em;
+      background: #222;
       color: #aaa;
+      font-size: 0.8em;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>MemeWall.io</h1>
-    <p class="tagline">Preserve memes for future generations!</p>
+    <p>Preserve memes for future generations — 1 Million Pixels Edition</p>
   </header>
 
-  <div class="paywall">
-    <p>Support the wall by donating and get your own meme pixel!</p>
-    <button onclick="showPaid()">I paid with BTC</button>
-    <button onclick="showPaid()">I paid with ETH</button>
-    <button onclick="showPaid()">I paid with TON</button>
-    <p class="notice">Your meme will appear after choosing a spot.</p>
+  <div class="zoom-controls">
+    <button onclick="setZoom(0.5)">Zoom Out</button>
+    <button onclick="setZoom(1)">Reset</button>
+    <button onclick="setZoom(2)">Zoom In</button>
   </div>
 
-  <div class="upload-form" id="uploadForm">
-    <p>Select a pixel, then upload your meme:</p>
-    <input type="file" id="memeFile" accept="image/*">
+  <div class="container">
+    <div class="grid" id="grid"></div>
   </div>
-
-  <div class="grid" id="grid"></div>
 
   <footer>
-    © 2025 MemeWall — BTC/ETH/TON supported — Powered by you
+    &copy; 2025 MemeWall — Powered by BTC / ETH / TON
   </footer>
 
   <script>
     const grid = document.getElementById('grid');
-    const form = document.getElementById('uploadForm');
-    const input = document.getElementById('memeFile');
-    let uploadEnabled = false;
-    let selectedPixel = null;
+    let zoomLevel = 1;
 
-    const exampleMemes = {
-      '1122': 'doge.png',
-      '2233': 'elon.png',
-      '3344': 'diamond_hands.png',
-      '4455': 'buy_the_dip.gif'
+    function setZoom(level) {
+      zoomLevel = level;
+      grid.style.transform = `scale(${zoomLevel})`;
+    }
+
+    const occupied = {
+      "1122": "doge.png",
+      "2233": "elon.png",
+      "3344": "diamond_hands.png",
+      "4455": "buy_the_dip.gif"
     };
 
-    for (let y = 0; y < 50; y++) {
-      for (let x = 0; x < 100; x++) {
+    for (let y = 0; y < 1000; y++) {
+      for (let x = 0; x < 1000; x++) {
         const key = `${x}${y}`;
         const div = document.createElement('div');
         div.className = 'pixel';
 
-        if (exampleMemes[key]) {
+        if (occupied[key]) {
           div.classList.add('occupied');
-          div.style.backgroundImage = `url('memes/${exampleMemes[key]}')`;
-          div.title = 'Meme pixel — already bought';
-        } else {
-          div.onclick = () => {
-            if (uploadEnabled) {
-              selectedPixel = div;
-              input.click();
-            } else {
-              alert("Please donate first to unlock uploading.");
-            }
-          };
+          div.style.backgroundImage = `url('memes/${occupied[key]}')`;
+          div.title = "Occupied meme pixel";
         }
 
         grid.appendChild(div);
       }
-    }
-
-    input.addEventListener('change', () => {
-      if (selectedPixel && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          selectedPixel.classList.add('occupied');
-          selectedPixel.style.backgroundImage = `url(${e.target.result})`;
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    });
-
-    function showPaid() {
-      uploadEnabled = true;
-      form.style.display = "block";
-      alert("You can now select a pixel and upload your meme.");
     }
   </script>
 </body>
